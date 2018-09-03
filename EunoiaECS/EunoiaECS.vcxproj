@@ -110,6 +110,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Common.h" />
+    <ClInclude Include="Src\ECS\BaseComponent.h" />
+    <ClInclude Include="Src\ECS\Component.h" />
+    <ClInclude Include="Src\ECS\ECSEngine.h" />
+    <ClInclude Include="Src\ECS\ECSTypeDefs.h" />
+    <ClInclude Include="Src\ECS\BaseSystem.h" />
+    <ClInclude Include="Src\ECS\System.h" />
+    <ClInclude Include="Src\ECS\SystemPipeline.h" />
+    <ClInclude Include="Src\Memory\Allocator.h" />
+    <ClInclude Include="Src\Memory\LinearAllocator.h" />
+    <ClInclude Include="Src\Memory\PoolAllocator.h" />
+    <ClInclude Include="Src\Memory\StackAllocator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\ECS\BaseComponent.cpp" />
+    <ClCompile Include="Src\ECS\ECSEngine.cpp" />
+    <ClCompile Include="Src\ECS\BaseSystem.cpp" />
+    <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Memory\LinearAllocator.cpp" />
+    <ClCompile Include="Src\Memory\PoolAllocator.cpp" />
+    <ClCompile Include="Src\Memory\StackAllocator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
