@@ -1,12 +1,13 @@
 #pragma once
 
 #include "BaseComponent.h"
-#include "System.h"
 #include "SystemPipeline.h"
 #include "../Memory/PoolAllocator.h"
 #include "../Memory/StackAllocator.h"
 #include <unordered_map>
 #include <vector>
+
+namespace Eunoia { namespace Core { class CoreEngine; } }
 
 namespace Eunoia { namespace ECS {
 
@@ -108,6 +109,7 @@ namespace Eunoia { namespace ECS {
 			void* pSystemMemory = m_systemStackAllocator.Allocate(sizeof(S));
 			BaseSystem* pSystem = new(pSystemMemory) S(std::forward<Args>(args)...);
 			pSystem->m_pECS = this;
+			pSystem->m_subEngines = m_subEngines;
 
 			m_systemPipelines[pipelineType][typeID] = pSystem;
 
@@ -127,6 +129,8 @@ namespace Eunoia { namespace ECS {
 		bool IsEntityValidForSystem(std::vector<ComponentContainer>& entityComponents, std::vector<ComponentTypeID>& required);
 		bool ContainsComponent(std::vector<ComponentContainer>& entityComponents, ComponentTypeID componentID);
 	private:
+		friend Core::CoreEngine;
+		SubEngines m_subEngines;
 
 		std::unordered_map<ComponentTypeID, PoolAllocator> m_componentTypeAllocators;
 		std::unordered_map<EntityID, std::vector<ComponentContainer>> m_entitiesComponents;

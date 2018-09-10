@@ -1,20 +1,14 @@
-#include "ECS\ECSEngine.h"
-#include "ECS\Component.h"
-#include "ECS\System.h"
+#include "Core\CoreEngine.h"
+#include "Rendering\Vertex.h"
+#include "Rendering\ResourceManager.h"
+#include "ECS\Components\Components.h"
+#include "ECS\Systems\Systems.h"
 
 using namespace Eunoia;
+using namespace Rendering;
+using namespace Core;
 using namespace ECS;
-
-struct PositionComponent : public Component<PositionComponent>
-{
-	PositionComponent(float x, float y, float z) :
-		x(x), y(y), z(z)
-	{}
-
-	float x;
-	float y;
-	float z;
-};
+using namespace Math;
 
 struct SpeedComponent : public Component<SpeedComponent>
 {
@@ -30,22 +24,61 @@ class MoveSystem : public System<MoveSystem>
 public:
 	MoveSystem()
 	{
-		AddComponentType(PositionComponent::COMPONENT_TYPE_ID);
 		AddComponentType(SpeedComponent::COMPONENT_TYPE_ID);
+		AddComponentType(TransformComponent::COMPONENT_TYPE_ID);
 	}
 
-	void UpdateEntity(EntityID entity, float dt) override
+	void ProcessEntity(EntityID entity, float dt)
 	{
-		PositionComponent* pPositionComponent = m_pECS->GetComponentByType<PositionComponent>(entity);
 		SpeedComponent* pSpeedComponent = m_pECS->GetComponentByType<SpeedComponent>(entity);
+		TransformComponent* pTransformComponent = m_pECS->GetComponentByType<TransformComponent>(entity);
 
-		pPositionComponent->x += pSpeedComponent->speed * dt;
-		pPositionComponent->y += pSpeedComponent->speed * dt;
-		pPositionComponent->z += pSpeedComponent->speed * dt;
+		const Vector3f& pos = pTransformComponent->transform.GetPos();
+		pTransformComponent->transform.GetPos().Set(sinf(m_time), pos.GetY(), pos.GetZ());
+
+		m_time += dt * pSpeedComponent->speed;
 	}
+private:
+	float m_time;
 };
+
+class TestApplication : public Application
+{
+public:
+	void Init() override;
+	void ShutDown() override;
+};
+
+void TestApplication::Init()
+{
+	std::vector<Vertex> vertices;
+	vertices.push_back(Vertex(Math::Vector3f(-0.5f, -0.5f, 0.0f), Math::Vector2f(0.0f, 1.0f)));
+	vertices.push_back(Vertex(Math::Vector3f(-0.5f, 0.5f, 0.0f), Math::Vector2f(0.0f, 0.0f)));
+	vertices.push_back(Vertex(Math::Vector3f(0.5f, 0.5f, 0.0f), Math::Vector2f(1.0f, 0.0f)));
+	vertices.push_back(Vertex(Math::Vector3f(0.5f, -0.5f, 0.0f), Math::Vector2f(1.0f, 1.0f)));
+	std::vector<uint32> indices = { 0, 1, 2, 0, 2, 3 };
+	MeshInfo info(vertices, indices);
+
+	MeshID mesh = ResourceManager::pMeshManager->CreateMesh(info);
+	
+	MaterialID brickMaterial = ResourceManager::pMaterialManager->CreateMaterial("Res/Textures/Bricks.jpg");
+
+	m_pEcs->CreateSystem<RenderableSubmissionSystem>(RENDER_PIPELINE);
+	m_pEcs->CreateSystem<MoveSystem>(UPDATE_PIPELINE);
+
+	EntityID quad = m_pEcs->CreateEntity();
+	m_pEcs->CreateComponent<TransformComponent>(quad);
+	m_pEcs->CreateComponent<MeshComponent>(quad, mesh, brickMaterial);
+	m_pEcs->CreateComponent<SpeedComponent>(quad, 1.0f);
+}
+
+void TestApplication::ShutDown()
+{
+
+}
 
 int main()
 {
-	uint32 i = 0;
+	CoreEngine coreEngine(new TestApplication(), "Eunoia Game Engine", 800, 600);
+	coreEngine.Start();
 }

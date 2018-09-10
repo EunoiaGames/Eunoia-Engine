@@ -68,20 +68,43 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)Dependencies\GLEW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLEW\lib64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;EU_RENDER_API_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;d3d11.lib;dxgi.lib;D3DCompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;EU_RENDER_API_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;d3d11.lib;dxgi.lib;D3DCompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -90,10 +113,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;EU_RENDER_API_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;d3d11.lib;dxgi.lib;D3DCompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -103,34 +128,105 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;EU_RENDER_API_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;d3d11.lib;dxgi.lib;D3DCompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Application.h" />
     <ClInclude Include="Src\Core\Common.h" />
+    <ClInclude Include="Src\Core\CoreEngine.h" />
+    <ClInclude Include="Src\Core\SubEngines.h" />
+    <ClInclude Include="Src\DataStructures\String.h" />
     <ClInclude Include="Src\ECS\BaseComponent.h" />
     <ClInclude Include="Src\ECS\Component.h" />
+    <ClInclude Include="Src\ECS\Components\Components.h" />
+    <ClInclude Include="Src\ECS\Components\MeshComponent.h" />
+    <ClInclude Include="Src\ECS\Components\TransformComponent.h" />
     <ClInclude Include="Src\ECS\ECSEngine.h" />
     <ClInclude Include="Src\ECS\ECSTypeDefs.h" />
     <ClInclude Include="Src\ECS\BaseSystem.h" />
     <ClInclude Include="Src\ECS\System.h" />
     <ClInclude Include="Src\ECS\SystemPipeline.h" />
+    <ClInclude Include="Src\ECS\Systems\RenderableSubmissionSystem.h" />
+    <ClInclude Include="Src\ECS\Systems\Systems.h" />
+    <ClInclude Include="Src\Math\GeneralMath.h" />
+    <ClInclude Include="Src\Math\Math.h" />
+    <ClInclude Include="Src\Math\Transform.h" />
     <ClInclude Include="Src\Memory\Allocator.h" />
     <ClInclude Include="Src\Memory\LinearAllocator.h" />
     <ClInclude Include="Src\Memory\PoolAllocator.h" />
     <ClInclude Include="Src\Memory\StackAllocator.h" />
+    <ClInclude Include="Src\Platform\D3D11\MeshManagerD3D11.h" />
+    <ClInclude Include="Src\Platform\D3D11\RenderContextD3D11.h" />
+    <ClInclude Include="Src\Platform\D3D11\ShaderManagerD3D11.h" />
+    <ClInclude Include="Src\Platform\D3D11\TextureManagerD3D11.h" />
+    <ClInclude Include="Src\Platform\Opengl\MeshManagerGL.h" />
+    <ClInclude Include="Src\Platform\Opengl\RenderContextGL.h" />
+    <ClInclude Include="Src\Platform\Opengl\ShaderManagerGL.h" />
+    <ClInclude Include="Src\Platform\Opengl\TextureManagerGL.h" />
+    <ClInclude Include="Src\Platform\Windows\Win32Display.h" />
+    <ClInclude Include="Src\Rendering\DeferredRenderingEngine.h" />
+    <ClInclude Include="Src\Rendering\Display.h" />
+    <ClInclude Include="Src\Rendering\MaterialManager.h" />
+    <ClInclude Include="Src\Rendering\MeshInfo.h" />
+    <ClInclude Include="Src\Rendering\MeshManager.h" />
+    <ClInclude Include="Src\Rendering\RenderApiEnums.h" />
+    <ClInclude Include="Src\Rendering\RenderContext.h" />
+    <ClInclude Include="Src\Rendering\RenderingEngine.h" />
+    <ClInclude Include="Src\Rendering\ResourceManager.h" />
+    <ClInclude Include="Src\Rendering\ResourceTypes.h" />
+    <ClInclude Include="Src\Rendering\ShaderManager.h" />
+    <ClInclude Include="Src\Rendering\ShaderType.h" />
+    <ClInclude Include="Src\Rendering\TextureManager.h" />
+    <ClInclude Include="Src\Rendering\Vertex.h" />
+    <ClInclude Include="Src\StaticLibs\stb_image.h" />
+    <ClInclude Include="Src\Utils\FileReader.h" />
+    <ClInclude Include="Src\Utils\ResourceIDAssigner.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\CoreEngine.cpp" />
+    <ClCompile Include="Src\DataStructures\String.cpp" />
     <ClCompile Include="Src\ECS\BaseComponent.cpp" />
     <ClCompile Include="Src\ECS\ECSEngine.cpp" />
     <ClCompile Include="Src\ECS\BaseSystem.cpp" />
+    <ClCompile Include="Src\ECS\Systems\RenderableSubmissionSystem.cpp" />
     <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Math\Math.cpp" />
     <ClCompile Include="Src\Memory\LinearAllocator.cpp" />
     <ClCompile Include="Src\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Src\Memory\StackAllocator.cpp" />
+    <ClCompile Include="Src\Platform\D3D11\MeshManagerD3D11.cpp" />
+    <ClCompile Include="Src\Platform\D3D11\RenderContextD3D11.cpp" />
+    <ClCompile Include="Src\Platform\D3D11\ShaderManagerD3D11.cpp" />
+    <ClCompile Include="Src\Platform\D3D11\TextureManagerD3D11.cpp" />
+    <ClCompile Include="Src\Platform\Opengl\MeshManagerGL.cpp" />
+    <ClCompile Include="Src\Platform\Opengl\RenderContextGL.cpp" />
+    <ClCompile Include="Src\Platform\Opengl\ShaderManagerGL.cpp" />
+    <ClCompile Include="Src\Platform\Opengl\TextureManagerGL.cpp" />
+    <ClCompile Include="Src\Platform\Windows\Win32Display.cpp" />
+    <ClCompile Include="Src\Rendering\DeferredRenderingEngine.cpp" />
+    <ClCompile Include="Src\Rendering\MaterialManager.cpp" />
+    <ClCompile Include="Src\Rendering\ResourceManager.cpp" />
+    <ClCompile Include="Src\StaticLibs\stb_image.c" />
+    <ClCompile Include="Src\Utils\FileReader.cpp" />
+    <ClCompile Include="Src\Utils\ResourceIDAssigner.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\Shaders\GLSL\Test.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\Shaders\HLSL\Test.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

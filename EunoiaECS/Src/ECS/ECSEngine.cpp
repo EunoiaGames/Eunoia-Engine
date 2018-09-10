@@ -69,9 +69,9 @@ namespace Eunoia { namespace ECS {
 			if (!pSystem->IsEnabled())
 				continue;
 
-			pSystem->PreUpdate(dt);
+			pSystem->PreProcess(dt);
 
-			std::vector<ComponentTypeID>& componentTypes = pSystem->GetComponentTypes();
+			SystemSignature& componentTypes = pSystem->GetSignature();
 
 			for (auto& entities : m_entitiesComponents)
 			{
@@ -79,10 +79,10 @@ namespace Eunoia { namespace ECS {
 				std::vector<ComponentContainer>& components = entities.second;
 				
 				if (IsEntityValidForSystem(components, componentTypes))
-					pSystem->UpdateEntity(entityID, dt);
+					pSystem->ProcessEntity(entityID, dt);
 			}
 
-			pSystem->PostUpdate(dt);
+			pSystem->PostProcess(dt);
 		}
 	}
 
